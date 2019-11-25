@@ -8,9 +8,9 @@
 #define DEVICE_NAME "esempdevice"
 #define BUF_LEN 10
 
-//tutte le volte che verrà aperto scriverà quanti processi lo hanno aperto attualmente
-//Una volta caricato il modulo, è possibile (se non già presente) inserirlo con mknod in /dev esm c MAJOR MINOR
-//ed andando a fare cat /dev/esm verrà messo a video quanto scritto in device_open
+//Tutte le volte che verrà aperto scriverà quanti processi lo hanno aperto attualmente.
+//Una volta caricato il modulo, creo il file esm in /dev con sudo mknod esm c MAJOR MINOR
+//e facendo cat /dev/esm verrà messo a video quanto scritto  nella funzione device_open
 
 static int Major;
 static int paral_cont = 0; //conteggio parallelo per contare il num di processi che utilizzano il modulo
@@ -70,7 +70,7 @@ static int device_open(struct inode *inode, struct file *file)
 	Device_Open++;
 	msg_Ptr = msg;
 	try_module_get(THIS_MODULE);//aumenta il count del numero di processi che usano il modulo
-	sprintf(msg, "Ciao! %d\n", paral_cont++);
+	sprintf(msg, "Ciao! %d\n", ++paral_cont);
 	return 0;
 }
 
